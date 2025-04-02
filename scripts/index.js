@@ -14,11 +14,12 @@ function createCard(cardTitleValue, cardImageLink, deleteCard) {
   const card = page.querySelector("#card-template").content;
   const cardElement = card.querySelector(".card").cloneNode(true);
   const cardImage = cardElement.querySelector(".card__image");
+  const cardTitle = cardElement.querySelector(".card__title");
   const cardDeleteButton = cardElement.querySelector(".card__delete-button");
 
   cardImage.src = cardImageLink;
   cardImage.alt = cardTitleValue;
-  cardElement.querySelector(".card__title").textContent = cardTitleValue;
+  cardTitle.textContent = cardTitleValue;
 
   cardDeleteButton.addEventListener("click", function () {
     deleteCard(cardDeleteButton.closest(".card"));
