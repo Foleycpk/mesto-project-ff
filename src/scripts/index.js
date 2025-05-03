@@ -7,6 +7,9 @@
 // @todo: Функция удаления карточки
 
 // @todo: Вывести карточки на страницу
+import '../pages/index.css';
+import {initialCards} from './cards.js';
+
 const page = document.querySelector(".page");
 const placesList = page.querySelector(".places__list");
 
@@ -40,3 +43,5 @@ function addCard(card, method = "append") {
 initialCards.forEach(function (card) {
   addCard(card);
 });
+
+
