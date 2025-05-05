@@ -8,40 +8,36 @@
 
 // @todo: Вывести карточки на страницу
 import '../pages/index.css';
-import {initialCards} from './cards.js';
+import {initialCards, addCard} from './cards.js';
+import {openEditProfilePopup, popupCallback} from './modals.js';
 
 const page = document.querySelector(".page");
-const placesList = page.querySelector(".places__list");
-
-function createCard(cardTitleValue, cardImageLink, deleteCard) {
-  const card = page.querySelector("#card-template").content;
-  const cardElement = card.querySelector(".card").cloneNode(true);
-  const cardImage = cardElement.querySelector(".card__image");
-  const cardTitle = cardElement.querySelector(".card__title");
-  const cardDeleteButton = cardElement.querySelector(".card__delete-button");
-
-  cardImage.src = cardImageLink;
-  cardImage.alt = cardTitleValue;
-  cardTitle.textContent = cardTitleValue;
-
-  cardDeleteButton.addEventListener("click", function () {
-    deleteCard(cardDeleteButton.closest(".card"));
-  });
-
-  return cardElement;
-}
-
-function deleteCard(card) {
-  card.remove();
-}
-
-function addCard(card, method = "append") {
-  const cardElement = createCard(card.name, card.link, deleteCard);
-  placesList[method](cardElement);
-}
 
 initialCards.forEach(function (card) {
   addCard(card);
 });
 
+const profileEditButton = page.querySelector(".profile__edit-button");
+const profileAddButton = page.querySelector(".profile__add-button");
+const placesList = page.querySelector(".places__list");
 
+const editeProfilePopup = page.querySelector(".popup_type_edit");
+const newCardPopup = page.querySelector(".popup_type_new-card");
+const imagePopup = page.querySelector(".popup_type_image");
+
+profileEditButton.addEventListener('click', function() {
+  openEditProfilePopup(editeProfilePopup, popupCallback);
+});
+
+// profileAddButton.addEventListener('click', function() {
+//   openPopup(newCardPopup, closePopupCallback);
+// });
+
+// placesList.addEventListener('click', function(evt) {
+//   openPopup(imagePopup, closePopupCallback);
+// });
+
+
+
+
+  
