@@ -30,7 +30,7 @@ const placesList = page.querySelector(".places__list");
 
 export function addCard(card, method = "append") {
   const cardElement = createCard(card.name, card.link, deleteCard);
-  placesList[method](cardElement);
+  placesList[method](cardElement); 
 }
 
 function deleteCard(card) {

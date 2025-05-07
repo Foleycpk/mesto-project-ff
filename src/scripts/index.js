@@ -9,7 +9,7 @@
 // @todo: Вывести карточки на страницу
 import '../pages/index.css';
 import {initialCards, addCard} from './cards.js';
-import {openEditProfilePopup, popupCallback} from './modals.js';
+import {openEditProfilePopup, openAddNewCardPopup} from './modals.js';
 
 const page = document.querySelector(".page");
 
@@ -22,22 +22,23 @@ const profileAddButton = page.querySelector(".profile__add-button");
 const placesList = page.querySelector(".places__list");
 
 const editeProfilePopup = page.querySelector(".popup_type_edit");
-const newCardPopup = page.querySelector(".popup_type_new-card");
+const addNewCardPopup = page.querySelector(".popup_type_new-card");
 const imagePopup = page.querySelector(".popup_type_image");
 
 profileEditButton.addEventListener('click', function() {
-  openEditProfilePopup(editeProfilePopup, popupCallback);
+  openEditProfilePopup(editeProfilePopup);
 });
 
-// profileAddButton.addEventListener('click', function() {
-//   openPopup(newCardPopup, closePopupCallback);
-// });
+profileAddButton.addEventListener('click', function() {
+  openAddNewCardPopup(addNewCardPopup);
+});
 
 // placesList.addEventListener('click', function(evt) {
 //   openPopup(imagePopup, closePopupCallback);
 // });
 
-
-
+//TO DO
+//вынести сюда навешивание слушателей и передачу их в качестве фолбека
+// в modals сделать универсальную функцию открытия модалки
 
   
