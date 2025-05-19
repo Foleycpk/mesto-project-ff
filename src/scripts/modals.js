@@ -3,12 +3,8 @@ import { addCard } from './cards.js';
 const profileNameElement = document.querySelector('.profile__title');
 const profileJobElement = document.querySelector('.profile__description');
 const editFormElement = document.querySelector('form[name="edit-profile"]');
-const profileNameInput = editFormElement.querySelector(
-  '.popup__input_type_name'
-);
-const profileJobInput = editFormElement.querySelector(
-  '.popup__input_type_description'
-);
+const profileNameInput = editFormElement.querySelector('.popup__input_type_name');
+const profileJobInput = editFormElement.querySelector('.popup__input_type_description');
 
 export function openEditProfilePopup(popup) {
   profileNameInput.value = profileNameElement.textContent;
@@ -89,5 +85,7 @@ function handleAddNewCardFormSubmit(evt) {
   };
 
   addCard(newCard, 'prepend');
+  debugger;
+  AddNewCardFormElement.reset();
   closePopup(evt.currentTarget);
 }
