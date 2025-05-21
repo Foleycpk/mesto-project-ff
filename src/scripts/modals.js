@@ -3,8 +3,15 @@ import { addCard } from './cards.js';
 const profileNameElement = document.querySelector('.profile__title');
 const profileJobElement = document.querySelector('.profile__description');
 const editFormElement = document.querySelector('form[name="edit-profile"]');
-const profileNameInput = editFormElement.querySelector('.popup__input_type_name');
-const profileJobInput = editFormElement.querySelector('.popup__input_type_description');
+const profileNameInput = editFormElement.querySelector(
+  '.popup__input_type_name'
+);
+const profileJobInput = editFormElement.querySelector(
+  '.popup__input_type_description'
+);
+
+//TO DO
+//вынести profileNameInput и profileJobInput во входные параметры
 
 export function openEditProfilePopup(popup) {
   profileNameInput.value = profileNameElement.textContent;
@@ -23,6 +30,19 @@ export function openAddNewCardPopup(popup) {
   popup.addEventListener('click', closePopupByOverlayClick);
   popup.addEventListener('keydown', closePopupByEsc);
   popup.addEventListener('submit', handleAddNewCardFormSubmit);
+
+  openPopup(popup);
+}
+
+export function openPopupImage(popup, imageLink, imageDescription) {
+  const imageElement = popup.querySelector('.popup__image');
+  const popupCaption = popup.querySelector('.popup__caption');
+  imageElement.src = imageLink;
+  imageElement.alt = imageDescription;
+  popupCaption.textContent = imageDescription;
+
+  popup.addEventListener('click', closePopupByCloseButtonClick);
+  popup.addEventListener('click', closePopupByOverlayClick);
 
   openPopup(popup);
 }
