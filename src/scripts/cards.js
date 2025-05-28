@@ -59,9 +59,7 @@ function createCard(
   cardImage.alt = cardTitleValue;
   cardTitle.textContent = cardTitleValue;
 
-  cardDeleteButton.addEventListener('click', function () {
-    deleteCard(cardDeleteButton.closest('.card'));
-  });
+  cardDeleteButton.addEventListener('click', deleteCard);
 
   cardLikeButton.addEventListener('click', likeCard);
 
@@ -70,8 +68,8 @@ function createCard(
   return cardElement;
 }
 
-function deleteCard(card) {
-  card.remove();
+function deleteCard(evt) {
+  evt.target.closest('.card').remove();
 }
 
 function likeCard(evt) {
@@ -79,7 +77,7 @@ function likeCard(evt) {
 }
 
 function openCard(evt) {
-  if (!evt.target.classList.contains('card__like-button')) {
+  if (!(evt.target.classList.contains('card__like-button')|| evt.target.classList.contains('card__delete-button'))) {
     const imagePopup = page.querySelector('.popup_type_image');
     const cardElement = evt.currentTarget;
     const imageElement = cardElement.querySelector('.card__image');

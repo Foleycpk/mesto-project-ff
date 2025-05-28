@@ -10,9 +10,6 @@ const profileJobInput = editFormElement.querySelector(
   '.popup__input_type_description'
 );
 
-//TO DO
-//вынести profileNameInput и profileJobInput во входные параметры
-
 export function openEditProfilePopup(popup) {
   profileNameInput.value = profileNameElement.textContent;
   profileJobInput.value = profileJobElement.textContent;
