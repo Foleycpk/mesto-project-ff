@@ -1,50 +1,8 @@
-import { addCard } from './cards.js';
+import { addCard, deleteCard, likeCard, openCard } from './cards.js';
 
-const profileNameElement = document.querySelector('.profile__title');
-const profileJobElement = document.querySelector('.profile__description');
-const editFormElement = document.querySelector('form[name="edit-profile"]');
-const profileNameInput = editFormElement.querySelector(
-  '.popup__input_type_name'
-);
-const profileJobInput = editFormElement.querySelector(
-  '.popup__input_type_description'
-);
+const page = document.querySelector('.page');
 
-export function openEditProfilePopup(popup) {
-  profileNameInput.value = profileNameElement.textContent;
-  profileJobInput.value = profileJobElement.textContent;
-
-  popup.addEventListener('click', closePopupByCloseButtonClick);
-  popup.addEventListener('click', closePopupByOverlayClick);
-  popup.addEventListener('keydown', closePopupByEsc);
-  popup.addEventListener('submit', handleEditFormSubmit);
-
-  openPopup(popup);
-}
-
-export function openAddNewCardPopup(popup) {
-  popup.addEventListener('click', closePopupByCloseButtonClick);
-  popup.addEventListener('click', closePopupByOverlayClick);
-  popup.addEventListener('keydown', closePopupByEsc);
-  popup.addEventListener('submit', handleAddNewCardFormSubmit);
-
-  openPopup(popup);
-}
-
-export function openPopupImage(popup, imageLink, imageDescription) {
-  const imageElement = popup.querySelector('.popup__image');
-  const popupCaption = popup.querySelector('.popup__caption');
-  imageElement.src = imageLink;
-  imageElement.alt = imageDescription;
-  popupCaption.textContent = imageDescription;
-
-  popup.addEventListener('click', closePopupByCloseButtonClick);
-  popup.addEventListener('click', closePopupByOverlayClick);
-
-  openPopup(popup);
-}
-
-function openPopup(popup) {
+export function openPopup(popup) {
   popup.classList.add('popup_is-opened');
 }
 
@@ -58,33 +16,39 @@ export function closePopup(popup) {
   popup.classList.remove('popup_is-opened');
 }
 
-function closePopupByOverlayClick(evt) {
+export function closePopupByOverlayClick(evt) {
   if (evt.target.classList.contains('popup')) {
     closePopup(evt.currentTarget);
   }
 }
 
-function closePopupByCloseButtonClick(evt) {
+export function closePopupByCloseButtonClick(evt) {
   if (evt.target.classList.contains('popup__close')) {
     closePopup(evt.currentTarget);
   }
 }
 
-function closePopupByEsc(evt) {
+export function closePopupByEsc(evt) {
   if (evt.key === 'Escape') {
     closePopup(evt.currentTarget);
   }
 }
 
-function handleEditFormSubmit(evt) {
+export function handleEditFormSubmit(evt) {
   evt.preventDefault();
+
+  const profileNameElement = page.querySelector('.profile__title');
+  const profileJobElement = page.querySelector('.profile__description');
+  const editFormElement = page.querySelector('form[name="edit-profile"]');
+  const profileNameInput = editFormElement.querySelector('.popup__input_type_name');
+  const profileJobInput = editFormElement.querySelector('.popup__input_type_description');
 
   profileNameElement.textContent = profileNameInput.value;
   profileJobElement.textContent = profileJobInput.value;
   closePopup(evt.currentTarget);
 }
 
-function handleAddNewCardFormSubmit(evt) {
+export function handleAddNewCardFormSubmit(evt) {
   evt.preventDefault();
 
   const AddNewCardFormElement = document.querySelector(
@@ -101,8 +65,7 @@ function handleAddNewCardFormSubmit(evt) {
     link: cardImageLinkInput.value,
   };
 
-  addCard(newCard, 'prepend');
-  debugger;
+  addCard(newCard, deleteCard, likeCard, openCard , 'prepend');
   AddNewCardFormElement.reset();
   closePopup(evt.currentTarget);
 }

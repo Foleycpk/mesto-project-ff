@@ -1,4 +1,8 @@
-import { openPopupImage } from './modals.js';
+import {
+  openPopup,
+  closePopupByCloseButtonClick,
+  closePopupByOverlayClick,
+} from './modals.js';
 
 export const initialCards = [
   {
@@ -30,7 +34,13 @@ export const initialCards = [
 const page = document.querySelector('.page');
 const placesList = page.querySelector('.places__list');
 
-export function addCard(card, method = 'append') {
+export function addCard(
+  card,
+  deleteCard,
+  likeCard,
+  openCard,
+  method = 'append'
+) {
   const cardElement = createCard(
     card.name,
     card.link,
@@ -68,22 +78,36 @@ function createCard(
   return cardElement;
 }
 
-function deleteCard(evt) {
+export function deleteCard(evt) {
   evt.target.closest('.card').remove();
 }
 
-function likeCard(evt) {
+export function likeCard(evt) {
   evt.target.classList.toggle('card__like-button_is-active');
 }
 
-function openCard(evt) {
-  if (!(evt.target.classList.contains('card__like-button')|| evt.target.classList.contains('card__delete-button'))) {
+export function openCard(evt) {
+  if (
+    !(
+      evt.target.classList.contains('card__like-button') ||
+      evt.target.classList.contains('card__delete-button')
+    )
+  ) {
     const imagePopup = page.querySelector('.popup_type_image');
     const cardElement = evt.currentTarget;
-    const imageElement = cardElement.querySelector('.card__image');
-    const imageLink = imageElement.src;
-    const imageDescription = imageElement.alt;
+    const cardImageElement = cardElement.querySelector('.card__image');
+    const cardImageLink = cardImageElement.src;
+    const cardImageDescription = cardImageElement.alt;
 
-    openPopupImage(imagePopup, imageLink, imageDescription);
+    const popupImageElement = imagePopup.querySelector('.popup__image');
+    const popupCaption = imagePopup.querySelector('.popup__caption');
+    popupImageElement.src = cardImageLink;
+    popupImageElement.alt = cardImageDescription;
+    popupCaption.textContent = cardImageDescription;
+
+    imagePopup.addEventListener('click', closePopupByCloseButtonClick);
+    imagePopup.addEventListener('click', closePopupByOverlayClick);
+
+    openPopup(imagePopup);
   }
 }
