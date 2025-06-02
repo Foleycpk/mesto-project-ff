@@ -1,44 +1,11 @@
-import {
-  openPopup,
-  closePopupByCloseButtonClick,
-  closePopupByOverlayClick,
-} from './modals.js';
-
-export const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg',
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg',
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg',
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg',
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg',
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg',
-  },
-];
-
-const page = document.querySelector('.page');
-const placesList = page.querySelector('.places__list');
+const card = document.querySelector('#card-template').content;
 
 export function addCard(
   card,
   deleteCard,
   likeCard,
-  openCard,
+  openImagePopup,
+  place,
   method = 'append'
 ) {
   const cardElement = createCard(
@@ -46,9 +13,9 @@ export function addCard(
     card.link,
     deleteCard,
     likeCard,
-    openCard
+    openImagePopup
   );
-  placesList[method](cardElement);
+  place[method](cardElement);
 }
 
 function createCard(
@@ -56,9 +23,8 @@ function createCard(
   cardImageLink,
   deleteCard,
   likeCard,
-  openCard
+  openImagePopup
 ) {
-  const card = page.querySelector('#card-template').content;
   const cardElement = card.querySelector('.card').cloneNode(true);
   const cardImage = cardElement.querySelector('.card__image');
   const cardTitle = cardElement.querySelector('.card__title');
@@ -73,7 +39,7 @@ function createCard(
 
   cardLikeButton.addEventListener('click', likeCard);
 
-  cardElement.addEventListener('click', openCard);
+  cardImage.addEventListener('click', openImagePopup);
 
   return cardElement;
 }
@@ -84,30 +50,4 @@ export function deleteCard(evt) {
 
 export function likeCard(evt) {
   evt.target.classList.toggle('card__like-button_is-active');
-}
-
-export function openCard(evt) {
-  if (
-    !(
-      evt.target.classList.contains('card__like-button') ||
-      evt.target.classList.contains('card__delete-button')
-    )
-  ) {
-    const imagePopup = page.querySelector('.popup_type_image');
-    const cardElement = evt.currentTarget;
-    const cardImageElement = cardElement.querySelector('.card__image');
-    const cardImageLink = cardImageElement.src;
-    const cardImageDescription = cardImageElement.alt;
-
-    const popupImageElement = imagePopup.querySelector('.popup__image');
-    const popupCaption = imagePopup.querySelector('.popup__caption');
-    popupImageElement.src = cardImageLink;
-    popupImageElement.alt = cardImageDescription;
-    popupCaption.textContent = cardImageDescription;
-
-    imagePopup.addEventListener('click', closePopupByCloseButtonClick);
-    imagePopup.addEventListener('click', closePopupByOverlayClick);
-
-    openPopup(imagePopup);
-  }
 }

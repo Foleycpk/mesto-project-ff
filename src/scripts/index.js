@@ -8,14 +8,52 @@
 
 // @todo: Вывести карточки на страницу
 import '../pages/index.css';
-import { initialCards, addCard, deleteCard, likeCard, openCard} from './cards.js';
-import { openPopup, closePopupByCloseButtonClick, closePopupByOverlayClick, closePopupByEsc, handleEditFormSubmit, handleAddNewCardFormSubmit } from './modals.js';
+import { addCard, deleteCard, likeCard } from './cards.js';
+import {
+  openPopup,
+  closePopup,
+  closePopupByCloseButtonClick,
+  closePopupByOverlayClick,
+} from './modals.js';
+
+export const initialCards = [
+  {
+    name: 'Архыз',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg',
+  },
+  {
+    name: 'Челябинская область',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg',
+  },
+  {
+    name: 'Иваново',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg',
+  },
+  {
+    name: 'Камчатка',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg',
+  },
+  {
+    name: 'Холмогорский район',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg',
+  },
+  {
+    name: 'Байкал',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg',
+  },
+];
 
 const page = document.querySelector('.page');
+export const placesList = page.querySelector('.places__list');
+export const imagePopup = page.querySelector('.popup_type_image');
+export const popupImageElement = imagePopup.querySelector('.popup__image');
+export const popupCaption = imagePopup.querySelector('.popup__caption');
+
 const profileEditButton = page.querySelector('.profile__edit-button');
 const profileAddButton = page.querySelector('.profile__add-button');
 const editeProfilePopup = page.querySelector('.popup_type_edit');
-const addNewCardPopup = page.querySelector('.popup_type_new-card');
+const newCardPopup = page.querySelector('.popup_type_new-card');
+const popups = [imagePopup, editeProfilePopup, newCardPopup];
 const profileNameElement = page.querySelector('.profile__title');
 const profileJobElement = page.querySelector('.profile__description');
 const editFormElement = page.querySelector('form[name="edit-profile"]');
@@ -25,28 +63,66 @@ const profileNameInput = editFormElement.querySelector(
 const profileJobInput = editFormElement.querySelector(
   '.popup__input_type_description'
 );
+const addNewCardFormElement = page.querySelector('form[name="new-place"]');
+const cardImageNameInput = addNewCardFormElement.querySelector(
+  '.popup__input_type_card-name'
+);
+const cardImageLinkInput = addNewCardFormElement.querySelector(
+  '.popup__input_type_url'
+);
+
+popups.forEach(function (item) {
+  item.addEventListener('click', closePopupByCloseButtonClick);
+  item.addEventListener('click', closePopupByOverlayClick);
+});
+
+function openImagePopup(evt) {
+  const cardImage = evt.target;
+  const cardImageLink = cardImage.src;
+  const cardImageDescription = cardImage.alt;
+
+  popupImageElement.src = cardImageLink;
+  popupImageElement.alt = cardImageDescription;
+  popupCaption.textContent = cardImageDescription;
+
+  openPopup(imagePopup);
+}
 
 initialCards.forEach(function (card) {
-  addCard(card, deleteCard, likeCard, openCard);
+  addCard(card, deleteCard, likeCard, openImagePopup, placesList);
 });
 
-profileEditButton.addEventListener('click', function () {
+function openPopupProfile() {
   profileNameInput.value = profileNameElement.textContent;
   profileJobInput.value = profileJobElement.textContent;
-
-  editeProfilePopup.addEventListener('click', closePopupByCloseButtonClick);
-  editeProfilePopup.addEventListener('click', closePopupByOverlayClick);
-  editeProfilePopup.addEventListener('keydown', closePopupByEsc);
   editeProfilePopup.addEventListener('submit', handleEditFormSubmit);
-
   openPopup(editeProfilePopup);
-});
+}
 
-profileAddButton.addEventListener('click', function () {
-  addNewCardPopup.addEventListener('click', closePopupByCloseButtonClick);
-  addNewCardPopup.addEventListener('click', closePopupByOverlayClick);
-  addNewCardPopup.addEventListener('keydown', closePopupByEsc);
-  addNewCardPopup.addEventListener('submit', handleAddNewCardFormSubmit);
+profileEditButton.addEventListener('click', openPopupProfile);
 
-  openPopup(addNewCardPopup);
-});
+function openNewCardPopup() {
+  newCardPopup.addEventListener('submit', handleAddNewCardFormSubmit);
+  openPopup(newCardPopup);
+}
+
+profileAddButton.addEventListener('click', openNewCardPopup);
+
+function handleEditFormSubmit(evt) {
+  evt.preventDefault();
+  profileNameElement.textContent = profileNameInput.value;
+  profileJobElement.textContent = profileJobInput.value;
+  closePopup(evt.currentTarget);
+}
+
+function handleAddNewCardFormSubmit(evt) {
+  evt.preventDefault();
+  const newCard = {
+    name: cardImageNameInput.value,
+    link: cardImageLinkInput.value,
+  };
+
+  addCard(newCard, deleteCard, likeCard, openImagePopup, placesList, 'prepend');
+  addNewCardFormElement.reset();
+  closePopup(evt.currentTarget);
+}
