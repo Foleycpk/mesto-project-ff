@@ -58,7 +58,6 @@ function openImagePopup(cardImageLink, cardImageDescription) {
   photoPopupImage.src = cardImageLink;
   photoPopupImage.alt = cardImageDescription;
   captionPopupImage.textContent = cardImageDescription;
-
   openPopup(imagePopup);
 }
 
