@@ -17,11 +17,8 @@ import {
   closePopupByOverlayClick,
 } from './modals.js';
 import {
-  isPopupInputValid,
-  hasInvalidPopupInput,
-  clearPopupErrorMessages,
-  toggleButtonState,
-  enablePopupButton
+  enableValidation,
+  clearValidation,
 } from './validation.js';
 
 const page = document.querySelector('.page');
@@ -33,25 +30,33 @@ export const captionPopupImage = imagePopup.querySelector('.popup__caption');
 const profileEditButton = page.querySelector('.profile__edit-button');
 const profileAddButton = page.querySelector('.profile__add-button');
 const editeProfilePopup = page.querySelector('.popup_type_edit');
+const profileForm = page.querySelector('form[name="edit-profile"]');
 const newCardPopup = page.querySelector('.popup_type_new-card');
+const newCardForm = page.querySelector('form[name="new-place"]');
 const popups = Array.from(page.querySelectorAll('.popup'));
-const popupsWithForm = Array.from(page.querySelectorAll('.popup__form'));
+const formList = Array.from(page.querySelectorAll('.popup__form'));
 const profileNameElement = page.querySelector('.profile__title');
 const profileJobElement = page.querySelector('.profile__description');
-const editFormElement = page.querySelector('form[name="edit-profile"]');
-const profileNameInput = editFormElement.querySelector(
+const profileNameInput = profileForm.querySelector(
   '.popup__input_type_name'
 );
-const profileJobInput = editFormElement.querySelector(
+const profileJobInput = profileForm.querySelector(
   '.popup__input_type_description'
 );
-const addNewCardFormElement = page.querySelector('form[name="new-place"]');
-const cardImageNameInput = addNewCardFormElement.querySelector(
+const cardImageNameInput = newCardForm.querySelector(
   '.popup__input_type_card-name'
 );
-const cardImageLinkInput = addNewCardFormElement.querySelector(
+const cardImageLinkInput = newCardForm.querySelector(
   '.popup__input_type_url'
 );
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__input-error_active'
+}; 
 
 initialCards.forEach(function (card) {
   addCard(card, deleteCard, likeCard, openImagePopup, placesList);
@@ -65,25 +70,17 @@ popups.forEach(function (popup) {
 profileEditButton.addEventListener('click', openPopupProfile);
 
 function openPopupProfile() {
-  let inputList = Array.from(editeProfilePopup.querySelectorAll('.popup__input'));
-  const buttonElement = editeProfilePopup.querySelector('.popup__button');
-
   profileNameInput.value = profileNameElement.textContent;
   profileJobInput.value = profileJobElement.textContent;
-  clearPopupErrorMessages(editeProfilePopup);
-  toggleButtonState(inputList, buttonElement);
+  clearValidation(profileForm, validationConfig); 
   openPopup(editeProfilePopup);
 }
 
 profileAddButton.addEventListener('click', openNewCardPopup);
 
 function openNewCardPopup() {
-  const inputList = Array.from(newCardPopup.querySelectorAll('.popup__input'));
-  const buttonElement = newCardPopup.querySelector('.popup__button');
-
-  addNewCardFormElement.reset();
-  clearPopupErrorMessages(newCardPopup);
-  toggleButtonState(inputList, buttonElement);
+  newCardForm.reset();
+  clearValidation(newCardForm, validationConfig);
   openPopup(newCardPopup);
 }
 
@@ -105,7 +102,7 @@ function handleAddNewCardFormSubmit(evt) {
   };
 
   addCard(newCard, deleteCard, likeCard, openImagePopup, placesList, 'prepend');
-  addNewCardFormElement.reset();
+  newCardForm.reset();
   closePopup(evt.currentTarget);
 }
 
@@ -116,22 +113,4 @@ function openImagePopup(cardImageLink, cardImageDescription) {
   openPopup(imagePopup);
 }
 
-popupsWithForm.forEach(function (popup) {
-  const inputList = Array.from(popup.querySelectorAll('.popup__input'));
-  setPopupValidationEventListeners(popup, inputList);
-});
-
-function setPopupValidationEventListeners(popup, inputList) {
-  const buttonElement = popup.querySelector('.popup__button');
-  // buttonElement.classList.add('popup__button_disabled');
-
-  inputList.forEach(function (input) {
-    input.addEventListener('input', () => {
-      isPopupInputValid(popup, input);
-      toggleButtonState(inputList, buttonElement);
-    });
-  });
-}
-
-
-
+enableValidation(validationConfig);
