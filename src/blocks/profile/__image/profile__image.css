@@ -1,12 +1,56 @@
 .profile__image {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 120px;
   height: 120px;
+  margin: 0 29px 0 0;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
-  background-size: cover;
   background-position: center;
-  margin: 0 29px 0 0;
+  background-size: cover;
+}
+
+.profile__image:hover {
+  cursor: pointer;
+}
+
+.profile__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  background-color: #000;
+  transition: opacity 0.3s;
+}
+
+.profile__image:hover .profile__overlay {
+  opacity: 0.8;
+}
+
+.profile__avatar-edit-button {
+  z-index: 1;
+  width: 26px;
+  height: 26px;
+  border: none;
+  padding: 0;
+  background: transparent;
+  cursor: inherit;
+}
+
+.profile__avatar-edit-icon {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.profile__image:hover .profile__avatar-edit-icon {
+  opacity: 1;
 }
 
 @media screen and (max-width: 740px) {

@@ -91,14 +91,13 @@ function hasInvalidPopupInput(inputList) {
 export function clearValidation(form, validationConfig) {
   const inputList = Array.from(form.querySelectorAll('.popup__input'));
   const buttonElement = form.querySelector(`${validationConfig.submitButtonSelector}`);
-  
+
   inputList.forEach((input) => {
     const errorElement = form.querySelector(`.${input.id}-error`);
     hideError(input, errorElement, validationConfig.errorClass, validationConfig.inputErrorClass);
   });
-
-   toggleButtonState(inputList, buttonElement, validationConfig.inactiveButtonClass)
-
+    
+  toggleButtonState(inputList, buttonElement, validationConfig.inactiveButtonClass);
 }
 
 export function enablePopupButton(buttonElement) {
