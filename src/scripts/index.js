@@ -16,7 +16,13 @@ import {
   closePopupByOverlayClick,
 } from './modals.js';
 import { enableValidation, clearValidation } from './validation.js';
-import { getCards, getUser, editUserProfile, createCard, changeAvatar } from './api.js';
+import {
+  getCards,
+  getUser,
+  editUserProfile,
+  createCard,
+  changeAvatar,
+} from './api.js';
 
 const page = document.querySelector('.page');
 
@@ -60,8 +66,8 @@ const validationConfig = {
 
 let usersProfileData;
 
-Promise.all([getCards(), getUser()]).then(
-  ([cards, user]) => {
+Promise.all([getCards(), getUser()])
+  .then(([cards, user]) => {
     usersProfileData = user;
     setProfileData(usersProfileData);
 
@@ -75,8 +81,10 @@ Promise.all([getCards(), getUser()]).then(
         placesList
       );
     });
-  }
-);
+  })
+  .catch((err) => {
+    console.log('Ошибка. Запрос не выполнен');
+  });
 
 function setProfileData(usersProfileData) {
   profileNameElement.textContent = usersProfileData.name;
@@ -85,7 +93,9 @@ function setProfileData(usersProfileData) {
 }
 
 popups.forEach(function (popup) {
-  popup.addEventListener('click', closePopupByCloseButtonClick);
+  const closeButton = popup.querySelector('.popup__close');
+
+  closeButton.addEventListener('click', closePopupByCloseButtonClick);
   popup.addEventListener('click', closePopupByOverlayClick);
 });
 
@@ -98,7 +108,6 @@ profileEditButton.addEventListener('click', openPopupProfile);
 function openPopupProfile() {
   profileNameInput.value = profileNameElement.textContent;
   profileJobInput.value = profileJobElement.textContent;
-  // console.log(profileForm)
   clearValidation(profileForm, validationConfig);
   openPopup(editeProfilePopup);
 }
@@ -126,38 +135,62 @@ newCardPopup.addEventListener('submit', (evt) => {
 function handleEditAvatarFormSubmit(evt, popup) {
   evt.preventDefault();
   const buttonElement = evt.target.querySelector('.popup__button');
-  buttonElement.textContent = 'Сохранение....';
+
+  switchLoadingState(true, buttonElement);
   changeAvatar(avatarLinkInput.value)
-    .then(() => {
+    .then((data) => {
       avatarImageElement.style.backgroundImage = `url(${avatarLinkInput.value})`;
       closePopup(popup);
-      buttonElement.textContent = 'Сохранить';
     })
     .catch((err) => {
       console.log(err);
-      buttonElement.textContent = 'Сохранить';
+    })
+    .finally(() => {
+      switchLoadingState(false, buttonElement);
     });
+}
+
+function switchLoadingState(
+  isLoading,
+  buttonElement,
+  loadingText = 'Сохранение....',
+  defaultText = 'Сохранить'
+) {
+  if (isLoading) {
+    buttonElement.textContent = loadingText;
+  } else {
+    buttonElement.textContent = defaultText;
+  }
 }
 
 function handleEditFormSubmit(evt, popup) {
   evt.preventDefault();
   const buttonElement = evt.target.querySelector('.popup__button');
-  buttonElement.textContent = 'Сохранение....';
-  profileNameElement.textContent = profileNameInput.value;
-  profileJobElement.textContent = profileJobInput.value;
-  editUserProfile(profileNameInput.value, profileJobInput.value);
-  buttonElement.textContent = 'Сохранить';
-  closePopup(popup);
+
+  switchLoadingState(true, buttonElement);
+  editUserProfile(profileNameInput.value, profileJobInput.value)
+    .then((data) => {
+      profileNameElement.textContent = data.name;
+      profileJobElement.textContent = data.about;
+      closePopup(popup);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      switchLoadingState(false, buttonElement);
+    });
 }
 
 function handleAddNewCardFormSubmit(evt, popup) {
+  evt.preventDefault();
   const newCard = {
     name: cardImageNameInput.value,
     link: cardImageLinkInput.value,
   };
-  evt.preventDefault();
   const buttonElement = popup.querySelector('.popup__button');
-  buttonElement.textContent = 'Сохранение....';
+
+  switchLoadingState(true, buttonElement);
   createCard(newCard.name, newCard.link)
     .then((card) => {
       addCard(
@@ -169,14 +202,14 @@ function handleAddNewCardFormSubmit(evt, popup) {
         placesList,
         'prepend'
       );
-    })
-    .then(() => {
       newCardForm.reset();
       closePopup(popup);
-      buttonElement.textContent = 'Сохранить';
     })
     .catch((err) => {
       console.log(err);
+    })
+    .finally(() => {
+      switchLoadingState(false, buttonElement);
     });
 }
 

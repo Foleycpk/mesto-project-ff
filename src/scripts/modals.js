@@ -17,9 +17,7 @@ export function closePopupByOverlayClick(evt) {
 }
 
 export function closePopupByCloseButtonClick(evt) {
-  if (evt.target.classList.contains('popup__close')) {
-    closePopup(evt.currentTarget);
-  }
+  closePopup(evt.currentTarget.closest('.popup'));
 }
 
 export function closePopupByEsc(evt) {

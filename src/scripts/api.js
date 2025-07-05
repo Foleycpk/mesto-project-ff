@@ -5,20 +5,21 @@ const config = {
     'Content-Type': 'application/json',
   },
 };
+
+function getResponseData(data) {
+  if (data.ok) {
+    return data.json();
+  } else {
+    return Promise.reject(`Что-то пошло не так: ${res.status}`);
+  }
+}
+
 export const getCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
   })
     .then((data) => {
-      if (data.ok) {
-        return data.json();
-      } else {
-        return Promise.reject(`Что-то пошло не так: ${res.status}`);
-      }
-    })
-    .then((initialCards) => initialCards)
-    .catch((err) => {
-      console.log('Ошибка. Запрос не выполнен');
+      return getResponseData(data);
     });
 };
 
@@ -27,19 +28,12 @@ export const getUser = () => {
     headers: config.headers,
   })
     .then((data) => {
-      if (data.ok) {
-        return data.json();
-      } else {
-        return Promise.reject(`Что-то пошло не так: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log('Ошибка. Запрос не выполнен');
+      return getResponseData(data);
     });
 };
 
 export const editUserProfile = (name, about) => {
-  fetch(`${config.baseUrl}/users/me`, {
+  return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
     headers: config.headers,
     body: JSON.stringify({
@@ -48,14 +42,7 @@ export const editUserProfile = (name, about) => {
     }),
   })
     .then((data) => {
-      if (data.ok) {
-        return data.ok;
-      } else {
-        return Promise.reject(`Что-то пошло не так: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log('Ошибка. Запрос не выполнен');
+      return getResponseData(data);
     });
 };
 
@@ -69,14 +56,7 @@ export const createCard = (name, link) => {
     }),
   })
     .then((data) => {
-      if (data.ok) {
-        return data.json();
-      } else {
-        return Promise.reject(`Что-то пошло не так: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log('Ошибка. Запрос не выполнен');
+      return getResponseData(data);
     });
 };
 
@@ -86,14 +66,7 @@ export const deleteCard = (cardId) => {
     headers: config.headers,
   })
     .then((data) => {
-      if (data.ok) {
-        return data.ok;
-      } else {
-        return Promise.reject(`Что-то пошло не так: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log('Ошибка. Запрос не выполнен');
+      return getResponseData(data);
     });
 };
 
@@ -102,15 +75,8 @@ export const addLike = (cardId) => {
     method: 'PUT',
     headers: config.headers,
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Что-то пошло не так: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log('Ошибка. Запрос не выполнен');
+    .then((data) => {
+      return getResponseData(data);
     });
 };
 
@@ -119,15 +85,8 @@ export const removeLike = (cardId) => {
     method: 'DELETE',
     headers: config.headers,
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Что-то пошло не так: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log('Ошибка. Запрос не выполнен');
+    .then((data) => {
+      return getResponseData(data);
     });
 };
 
@@ -139,14 +98,7 @@ export const changeAvatar = (imageLink) => {
       avatar: `${imageLink}`,
     }),
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Что-то пошло не так: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log('Ошибка. Запрос не выполнен');
+    .then((data) => {
+      return getResponseData(data);
     });
 };

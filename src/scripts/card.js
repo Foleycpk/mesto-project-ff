@@ -62,25 +62,23 @@ function createCardElement(
   }
 
   cardLikeButton.addEventListener('click', (evt) => {
-    likeCard(cardElement);
     if (cardLikeButton.classList.contains('card__like-button_is-active')) {
-      addLike(cardId)
-        .then((data) => {
-          cardLikeCounter.textContent = data.likes.length;
-        })
-        .catch((err) => {
-          console.log('Ошибка. Запрос не выполнен');
-          likeCard(cardElement);
-
-        });
-    } else {
       removeLike(cardId)
         .then((data) => {
+          likeCard(cardElement);
           cardLikeCounter.textContent = data.likes.length;
         })
         .catch((err) => {
           console.log('Ошибка. Запрос не выполнен');
+        });
+    } else {
+      addLike(cardId)
+        .then((data) => {
           likeCard(cardElement);
+          cardLikeCounter.textContent = data.likes.length;
+        })
+        .catch((err) => {
+          console.log('Ошибка. Запрос не выполнен');
         });
     }
   });
@@ -104,7 +102,6 @@ export function deleteCardElement(evt, cardId) {
 
 export function likeCard(cardElement) {
   const cardLikeButton = cardElement.querySelector('.card__like-button');
-
   cardLikeButton.classList.toggle('card__like-button_is-active');
 }
 
